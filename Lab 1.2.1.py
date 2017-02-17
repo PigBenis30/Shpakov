@@ -2,7 +2,7 @@ import functools as f
 
 def main():
     x = ""
-    while(True):
+    while True:
         x = input("Введите число из диапазона [100 - 9999], или Q чтобы выйти:")
         if x == "Q":
             return 0
