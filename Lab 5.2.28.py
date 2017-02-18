@@ -31,13 +31,7 @@ class BinHeap:
         self.heapsize = len(list) - 1
         for i in range(len(list) // 2, -1, -1):
             self.heapify(i)
-
-    def heapSort(self):
-        pass
-
-    def extractMax(self):
-        pass
-
+            
     def getHeap(self):
         return self.heaplist
 
