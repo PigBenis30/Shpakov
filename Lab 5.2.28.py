@@ -26,13 +26,13 @@ class BinHeap:
             self.heaplist[largest] = tmp
             self.heapify(largest)
 
-    def buildHeap(self, list):
+    def build_heap(self, list):
         self.heaplist = list
         self.heapsize = len(list) - 1
         for i in range(len(list) // 2, -1, -1):
             self.heapify(i)
-            
-    def getHeap(self):
+
+    def get_heap(self):
         return self.heaplist
 
 def leaves(heap):
@@ -83,9 +83,10 @@ def main():
     for i in range(n):
         list.append(random_item())
     print("Входные данные: \n", list)
-    heap.buildHeap(list)
-    print("Структура данных, отсортированная по правилу полного (сбалансированного) бинарного дерева: \n", heap.getHeap())
-    tree_leaves = leaves(heap.getHeap())
+    heap.build_heap(list)
+    print("Структура данных, отсортированная по правилу полного (сбалансированного) бинарного дерева: \n",
+          heap.get_heap())
+    tree_leaves = leaves(heap.get_heap())
     steck = []
     print("Листья дерева: \n", tree_leaves)
     for i in range(len(tree_leaves)):
