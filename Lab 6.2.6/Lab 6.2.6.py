@@ -2,6 +2,61 @@ import DataBase
 import sys
 import os
 
+def __doc__():
+    """Данная программа предназначена для учебных целей.
+    Она не может учитывать невероятнео множество факторов,
+    которые требуют контроля людей, однако поставленные перед собой
+    задачи, дополняя их встроенной базой данных, выполняет"""
+
+def plane_info(db_tickets, db_planes):
+    while True:
+        cls()
+        print("Номера рейсов:")
+        for i in range(len(db_planes)):
+            print("{0}.Рейс номер {1} ({2})".format(i, db_planes[i]['number'], db_planes[i]['country']))
+        print("Введите номер рейса:")
+        number = int_input()
+        id = -1
+        for i in range(len(db_planes)):
+            if number == db_planes[i]['number']:
+                id = i
+        if id != -1:
+            counter = 0
+            capacity = 0
+            for i in range(len(db_tickets)):
+                if db_tickets[i]['plane'] == number:
+                    capacity += 1
+            print_plane(db_planes[id])
+            print("Людей, забронировавших данный рейс - {0}".format(capacity))
+            break
+        else:
+            continue
+
+def search_path(db):
+    while True:
+        cls()
+        for i in range(len(db)):
+            print("{0}.{1}".format(i, db[i]['country']))
+            for j in range(len(db[i]['subpoints'])):
+                if db[i]['subpoints'][j]['country'] != "":
+                    print("    {0}.{1}".format(j, db[i]['subpoints'][j]['country']))
+        print("Введите название страны: ")
+        country = char_input()
+        length = 40000
+        number = 0
+        for i in range(len(db)):
+            if country == db[i]['country'] and db[i]['length'] < length:
+                length = db[i]['length']
+                number = db[i]['number']
+            for j in range(len(db[i]['subpoints'])):
+                if country == db[i]['subpoints'][j]['country'] and sum([db[i]['subpoints'][it]['length'] for it in range(len(db[i]['subpoints']))]) < length:
+                    length = sum([db[i]['subpoints'][it]['length'] for it in range(len(db[i]['subpoints']))])
+                    number = db[i]['number']
+        if length != 40000:
+            print("Ваш подходящий рейс - {0}. Расстояние - {1}".format(number, length))
+            input("Введите любую строку для продолжения...")
+            break
+
 def print_ticket(db, db_plane):
     print("Введите ваш номер паспорта:")
     iterator = -1
@@ -121,13 +176,25 @@ def add_ticket(db, db_plane):
             print("{0}.Рейс номер {1} ({2})".format(i, db_plane[i]['number'], db_plane[i]['country']))
         print("Введите номер рейса: ")
         db[counter]['plane'] = int_input()
-        check = 0
+        id = -1
         for i in range(len(db_plane)):
             if db_plane[i]['number'] == db[counter]['plane']:
-                check = 1
-        if check == 1:
+                id = i
+        if id != -1:
             print("Рейс найден")
-            break
+            capacity = 0
+            if db_plane[id]['type'] == 'Ty-154':
+                limit = 140
+            else:
+                limit = 80
+            for i in range(len(db)):
+                if db[i]['plane'] == db[counter]['plane']:
+                    capacity += 1
+            if limit - capacity > 0:
+                print("Рейс забронирован")
+                break
+            else:
+                print("Нету свободных мест")
         else:
             print("Рейс не найден")
     return db
@@ -427,7 +494,7 @@ def add_plane(db):
         db[counter]['subpoints'][i]['country'] = char_input()
         if db[counter]['subpoints'][i]['country'] == "q":
             db[counter]['subpoints'][i]['country'] = ""
-            db[counter]['subpoints'][i]['length'] = ""
+            db[counter]['subpoints'][i]['length'] = 0
             break
         check_val = 0
         for it in range(len(db)):
@@ -471,13 +538,13 @@ def main():
         elif switch == "2":
             search_plane(db)
         elif switch == "3":
-            break
+            search_path(db)
         elif switch == "4":
             tickets_func(db_tickets, db)
         elif switch == "5":
             print_ticket(db_tickets, db)
         elif switch == "6":
-            break
+            plane_info(db_tickets, db)
         elif switch == "7":
             print_planes(db)
         elif switch == "8":
